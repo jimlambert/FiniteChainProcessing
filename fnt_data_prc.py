@@ -42,16 +42,11 @@ def read_datafile(filename, datatype):
     """ 
     header,data=io.readOutFile(filename, HEADER_SIZE=1)
     data = [row[1:] for row in data]
-
     header = header[0]
     header = [(header[n]+header[n+1]).strip('.') for n in range(0,len(header)-1,2)] 
-
     ncol = len(header)
-        
     typelst = [datatype]*ncol
-
     tpdata = io.typeSetData(data,typelst)
-    
     return dict(zip(header,np.transpose(tpdata)))
    
 
@@ -60,11 +55,21 @@ def read_corr_data_file(filename, datatype):
     datadict['r'] = re.search(r'(?<=-r)(.*)(?=\.out)',filename).group(1)    
     return datadict
 
+
+def connected_correlations(r, corrs, mags):
+    concorrs = [] 
+    for (j, corr) in enumerate(corrs):
+        concorrs.append(corr-(mags[i]*mags[r]))
+    return np.array(concorrs)
+
+
 if __name__=="__main__":
     import sys
 
-    datadict = read_datafile(sys.argv[1], complex)
-    print(sys.argv[1]) 
-    print('here')
-    datadict = read_corr_data_file(sys.argv[1],complex)
-    print(datadict['ZZCorr'])
+    
+
+    #datadict = read_datafile(sys.argv[1], complex)
+    #print(sys.argv[1]) 
+    #print('here')
+    #datadict = read_corr_data_file(sys.argv[1],complex)
+    
